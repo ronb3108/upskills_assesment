@@ -92,7 +92,7 @@ def constitute_dictionaries(data_frame, mode='word',
         total_count = sum(item_counts.values())
 
         if mode == 'word' and frequency_threshold:
-            filtered_counts = {item: count / total_count for item, count
+            filtered_counts = {item: count for item, count
                                in item_counts.items()
                                if count / total_count >= frequency_threshold}
         else:
