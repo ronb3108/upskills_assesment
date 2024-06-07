@@ -1,22 +1,12 @@
-import os
-import json
-from language_detecion import detect_language
+from language_detection import detect_language
+from load_dictionary import load_dictionaries
 
 
 def main():
-    output_folder = "C://Users//ronb3//Documents//data_upskills"
-    # os.getenv("OUTPUT_FOLDER", "frequency_dict_")
-    if output_folder is None:
-        raise ValueError("OUTPUT_FOLDER environment variable is not set.")
 
-    for mode in ['word', 'character']:
-        # Construct output file name
-        output_file = os.path.join(output_folder, f"{'dict'}_{mode}.json")
-        with open(output_file, "r") as file:
-            if mode == 'word':
-                language_freqs = json.load(file)
-            if mode == 'character':
-                char_freqs = json.load(file)
+    # TO CHANGE BY THE USER
+    output_folder = "C://Users//ronb3//Documents//data_upskills"
+    language_freqs, char_freqs = load_dictionaries(output_folder)
 
     print("Welcome to Language Detection!")
     print("Please enter a sentence:")

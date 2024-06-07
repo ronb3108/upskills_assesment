@@ -1,9 +1,9 @@
 import os
 import json
-from collections import defaultdict, Counter
-from tqdm import tqdm
 import pandas as pd
 import re
+from collections import defaultdict, Counter
+from tqdm import tqdm
 
 
 def get_character_pattern(alphabets=None):
@@ -106,25 +106,50 @@ def constitute_dictionaries(data_frame, mode='word',
     return normalized_frequency_dict
 
 
+def load_dictionaries(output_folder):
+    """
+    Loads word and character frequency dictionaries from JSON files.
+
+    Parameters:
+    output_folder (str): The path to the folder containing the JSON files.
+
+    Returns:
+    tuple: A tuple containing two dictionaries:
+           - language_freqs: Dictionary with word frequencies.
+           - char_freqs: Dictionary with character frequencies.
+    """
+    language_freqs = {}
+    char_freqs = {}
+
+    for mode in ['word', 'character']:
+        # Construct output file name
+        output_file = os.path.join(output_folder, f"dict_{mode}.json")
+
+        try:
+            with open(output_file, "r") as file:
+                if mode == 'word':
+                    language_freqs = json.load(file)
+                elif mode == 'character':
+                    char_freqs = json.load(file)
+        except FileNotFoundError:
+            print(f"Error: The file {output_file} was not found.")
+        except json.JSONDecodeError:
+            print(f"Error: The file {output_file} is not a valid JSON file.")
+
+    return language_freqs, char_freqs
+
+
 if __name__ == "__main__":
-    # Check if TRAIN_FOLDER_PATH environment variable is set
+
+    # TO CHANGE BY THE USER
     train_folder_path = "C://Users//ronb3//Documents//data_upskills"
-    # os.getenv("TRAIN_FOLDER_PATH")
-    if train_folder_path is None:
-        raise ValueError("TRAIN_FOLDER_PATH environment variable is not set.")
+    output_folder = "C://Users//ronb3//Documents//data_upskills"
 
     # Construct the full path to the train.csv file
     train_csv_path = os.path.join(train_folder_path, "train.csv")
 
     # Load data frame from the specified path
     df_train = pd.read_csv(train_csv_path)
-
-    # Check if OUTPUT_FILE_PREFIX environment variable is set, use default
-    # if not set
-    output_folder = "C://Users//ronb3//Documents//data_upskills"
-    # os.getenv("OUTPUT_FOLDER", "frequency_dict_")
-    if output_folder is None:
-        raise ValueError("OUTPUT_FOLDER environment variable is not set.")
 
     # Iterate over modes (word, character) and create dictionaries
     for mode in ['word', 'character']:
